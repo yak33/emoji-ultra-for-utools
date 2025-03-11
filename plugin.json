@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "logo": "logo.png",
   "author": "Emoji Ultra",
-  "homepage": "https://github.com/yak33/EmojiUltra",
+  "homepage": "https://github.com/yak33/emoji-ultra-for-utools",
   "preload": "preload.js",
   "main": "index.html",
   "features": [
