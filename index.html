@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Ultra</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 网格布局 */
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .emoji-item {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 15px 10px;
+            position: relative;
+        }
+
+        .emoji-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .emoji-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .emoji-name {
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .emoji-details {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 13px;
+            color: #666;
+            width: 100%;
+        }
+
+        .emoji-category {
+            background-color: #f0f0f0;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 90%;
+        }
+
+        .emoji-description {
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            text-align: center;
+            margin-top: 3px;
+            font-size: 12px;
+        }
+
+        .emoji-shortcut {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .style-switcher {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            font-size: 28px;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
+        .style-switcher:hover {
+            transform: rotate(30deg);
+        }
+
+        /* 不同样式主题 */
+        .theme-colorful .emoji-item {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .theme-dark .emoji-item {
+            background-color: #2d3436;
+            color: white;
+        }
+
+        .theme-dark .emoji-details {
+            color: #ddd;
+        }
+
+        .theme-dark .emoji-category {
+            background-color: #636e72;
+            color: white;
+        }
+
+        .theme-cute .emoji-item {
+            background-color: #fff0f5;
+            border: 2px solid #ffcce6;
+            box-shadow: 0 3px 10px rgba(255, 77, 148, 0.1);
+        }
+
+        .theme-cute .emoji-icon {
+            background-color: #ffcce6;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(255, 77, 148, 0.2);
+            color: #ff4d94;
+        }
+
+        .theme-cute .emoji-category {
+            background-color: #ffcce6;
+            color: #ff4d94;
+        }
+
+        .theme-minimal .emoji-item {
+            background-color: white;
+            border: 1px solid #eee;
+            box-shadow: none;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .emoji-item {
+            animation: fadeIn 0.3s ease-out forwards;
+            opacity: 0;
+        }
+
+        /* 确保每个项目有不同的延迟 */
+        .emoji-item:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        .emoji-item:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .emoji-item:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+
+        .emoji-item:nth-child(4) {
+            animation-delay: 0.2s;
+        }
+
+        .emoji-item:nth-child(5) {
+            animation-delay: 0.25s;
+        }
+
+        .emoji-item:nth-child(6) {
+            animation-delay: 0.3s;
+        }
+
+        .emoji-item:nth-child(7) {
+            animation-delay: 0.35s;
+        }
+
+        .emoji-item:nth-child(8) {
+            animation-delay: 0.4s;
+        }
+
+        .emoji-item:nth-child(9) {
+            animation-delay: 0.45s;
+        }
+
+        /* 添加更多的延迟以支持网格中的更多项目 */
+        .emoji-item:nth-child(10) {
+            animation-delay: 0.5s;
+        }
+
+        .emoji-item:nth-child(11) {
+            animation-delay: 0.55s;
+        }
+
+        .emoji-item:nth-child(12) {
+            animation-delay: 0.6s;
+        }
+
+        .emoji-item:nth-child(13) {
+            animation-delay: 0.65s;
+        }
+
+        .emoji-item:nth-child(14) {
+            animation-delay: 0.7s;
+        }
+
+        .emoji-item:nth-child(15) {
+            animation-delay: 0.75s;
+        }
+
+        .emoji-item:nth-child(16) {
+            animation-delay: 0.8s;
+        }
+
+        /* 响应式布局 */
+        @media (max-width: 768px) {
+            .emoji-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .emoji-grid {
+                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            }
+
+            .emoji-icon {
+                font-size: 45px;
+            }
+
+            .emoji-name {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <input type="text" class="search-box" placeholder="搜索emoji表情..." id="searchInput">
+        <ul class="emoji-grid" id="emojiList"></ul>
+    </div>
+
+    <div class="style-switcher" id="styleSwitcher">🎨</div>
+
+    <script>
+        // 获取emoji数据
+        const processedEmojiData = window.preload.getEmojiData();
+
+        // 主题列表
+        const themes = ['default', 'colorful', 'dark', 'cute', 'minimal'];
+        let currentThemeIndex = 0;
+
+        // DOM 元素
+        const searchInput = document.getElementById('searchInput');
+        const emojiList = document.getElementById('emojiList');
+        const styleSwitcher = document.getElementById('styleSwitcher');
+
+        // 渲染emoji网格
+        function renderEmojiList(emojis) {
+            emojiList.innerHTML = '';
+
+            emojis.forEach((emoji, index) => {
+                const listItem = document.createElement('li');
+                listItem.className = 'emoji-item';
+                listItem.dataset.index = index;
+
+                // 只为前10个显示快捷键（保留功能但不显示）
+                const category = emoji.category.split('/')[1];
+
+                // 构建九宫格样式的内容（移除快捷键显示）
+                listItem.innerHTML = `
+                    <div class="emoji-icon">${emoji.emoji}</div>
+                    <div class="emoji-name">${emoji.name}</div>
+                    <div class="emoji-details">
+                        <div class="emoji-category">${category}</div>
+                        <div class="emoji-description">${emoji.description}</div>
+                    </div>
+                `;
+
+                // 点击事件
+                listItem.addEventListener('click', () => {
+                    window.preload.inputEmoji(emoji.emoji);
+                });
+
+                emojiList.appendChild(listItem);
+            });
+        }
+
+        // 搜索功能
+        searchInput.addEventListener('input', () => {
+            const keyword = searchInput.value.toLowerCase();
+
+            if (!keyword) {
+                renderEmojiList(processedEmojiData.slice(0, 100)); // 限制显示数量以提高性能
+                return;
+            }
+
+            const results = processedEmojiData
+                .filter(emoji => emoji.searchTerms.includes(keyword))
+                .sort((a, b) => {
+                    const aNameMatch = a.name.includes(keyword);
+                    const bNameMatch = b.name.includes(keyword);
+
+                    if (aNameMatch && !bNameMatch) return -1;
+                    if (!aNameMatch && bNameMatch) return 1;
+                    return 0;
+                });
+
+            renderEmojiList(results.slice(0, 100));
+        });
+
+        // 键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            // Alt + 数字键 (1-9, 0)
+            if (e.altKey && !e.ctrlKey && !e.shiftKey && /^[0-9]$/.test(e.key)) {
+                e.preventDefault();
+
+                const index = e.key === '0' ? 9 : parseInt(e.key) - 1;
+                const item = document.querySelector(`.emoji-item[data-index="${index}"]`);
+
+                if (item) {
+                    const emoji = processedEmojiData[index].emoji;
+                    window.preload.inputEmoji(emoji);
+                }
+            }
+        });
+
+        // 样式切换器
+        styleSwitcher.addEventListener('click', () => {
+            // 移除当前主题
+            document.body.classList.remove(`theme-${themes[currentThemeIndex]}`);
+
+            // 切换到下一个主题
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+
+            // 应用新主题
+            if (currentThemeIndex > 0) { // 跳过default
+                document.body.classList.add(`theme-${themes[currentThemeIndex]}`);
+            }
+
+            // 保存主题设置
+            window.preload.saveTheme(themes[currentThemeIndex]);
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 加载保存的主题
+            const savedTheme = window.preload.loadTheme();
+            if (savedTheme) {
+                const themeIndex = themes.indexOf(savedTheme);
+                if (themeIndex !== -1) {
+                    currentThemeIndex = themeIndex;
+                    if (currentThemeIndex > 0) { // 跳过default
+                        document.body.classList.add(`theme-${themes[currentThemeIndex]}`);
+                    }
+                }
+            }
+
+            // 显示初始emoji列表
+            renderEmojiList(processedEmojiData.slice(0, 100));
+
+            // 聚焦搜索框
+            searchInput.focus();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+{
+  "pluginName": "emoji搜索Ultra",
+  "description": "快速搜索和使用emoji表情",
+  "version": "1.0.0",
+  "logo": "logo.png",
+  "author": "Emoji Ultra",
+  "homepage": "https://github.com/yak33/EmojiUltra",
+  "preload": "preload.js",
+  "main": "index.html",
+  "features": [
+    {
+      "code": "EmojiUltra",
+      "explain": "快速搜索emoji表情",
+      "icon": "logo.png",
+      "cmds": ["emoji", "表情", "emoji搜索"]
+    }
+  ]
+} 
