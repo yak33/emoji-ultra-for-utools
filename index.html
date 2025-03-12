@@ -355,7 +355,7 @@
             const keyword = searchInput.value.toLowerCase();
 
             if (!keyword) {
-                renderEmojiList(processedEmojiData.slice(0, 100)); // 限制显示数量以提高性能
+                renderEmojiList(processedEmojiData.slice(0, 10000)); // 限制显示数量以提高性能
                 return;
             }
 
@@ -370,7 +370,7 @@
                     return 0;
                 });
 
-            renderEmojiList(results.slice(0, 100));
+            renderEmojiList(results.slice(0, 10000));
         });
 
         // 键盘快捷键
@@ -421,7 +421,7 @@
             }
 
             // 显示初始emoji列表
-            renderEmojiList(processedEmojiData.slice(0, 100));
+            renderEmojiList(processedEmojiData.slice(0, 10000));
 
             // 聚焦搜索框
             searchInput.focus();
