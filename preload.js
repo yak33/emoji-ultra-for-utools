@@ -168,6 +168,9 @@ window.exports = {
       select: (action, itemData) => {
         const emoji = itemData.data.emoji;
         
+        // 将emoji复制到系统剪贴板
+        clipboard.writeText(emoji);
+        
         // 直接使用hideMainWindowTypeString输入emoji
         utools.hideMainWindowTypeString(emoji);
         
@@ -209,6 +212,9 @@ window.exports = {
       select: (action, itemData) => {
         const emoji = itemData.data.emoji;
         
+        // 将emoji复制到系统剪贴板
+        clipboard.writeText(emoji);
+        
         // 直接使用hideMainWindowTypeString输入emoji
         utools.hideMainWindowTypeString(emoji);
         
@@ -235,6 +241,9 @@ window.preload = {
   
   // 输入emoji到活动窗口
   inputEmoji: (emoji) => {
+    // 将emoji复制到系统剪贴板
+    clipboard.writeText(emoji);
+    
     // 直接使用hideMainWindowTypeString输入emoji
     utools.hideMainWindowTypeString(emoji);
     
